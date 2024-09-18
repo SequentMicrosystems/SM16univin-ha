@@ -1,0 +1,61 @@
+import lib16univin
+API = lib16univin.SM16univin
+DOMAIN = "SM16univin"
+NAME_PREFIX = "sm16ui"
+SM_MAP = {
+    "binary_sensor": {
+        "dig": {
+                "chan_no": 16,
+                "com": {
+                    "get": "get_dig_in",
+                },
+        },
+    },
+    "button": {
+        "dig_rst": {
+                "chan_no": 16,
+                "com": {
+                    "get": "reset_dig_in_counter",
+                },
+        }
+    },
+    "switch": {
+        "dig_cnt_en": {
+                "chan_no": 16,
+                "com": {
+                    "get": "get_dig_in_cnt_en",
+                    "set": "set_dig_in_cnt_en",
+                },
+        },
+    },
+    "sensor":  {
+        "dig_cnt": {
+                "chan_no": 16,
+                "com": {
+                    "get": "get_dig_in_counter",
+                    "set": "set_dig_in_counter",
+                },
+        },
+        "u": {
+                "chan_no": 16,
+                "uom": "V",
+                "com": {
+                    "get": "get_u_in",
+                },
+        },
+        "r1k": {
+                "chan_no": 16,
+                "uom": "Ohm",
+                "com": {
+                    "get": "get_r1k_in",
+                },
+        },
+        "r10k": {
+                "chan_no": 16,
+                "uom": "Ohm",
+                "com": {
+                    "get": "get_r10k_in",
+                },
+        },
+    },
+}
