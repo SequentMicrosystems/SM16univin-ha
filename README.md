@@ -99,3 +99,40 @@ SM16univin:
     - stack: 2
     - stack: 3
 ```
+
+- Only specific entities for different stack levels:
+
+```yaml
+SM16univin:
+    - stack: 0
+      relay_1:
+      relay_3:
+      opto_1:
+        update_interval: 0.1
+    - stack: 2
+      relay:
+        chan_range: "1..8"
+      opto_cnt:
+        chan_range: "2..6"
+        update_interval: 1
+```
+
+[//]: # (__CUSTOM_README__ START)
+[//]: # (__CUSTOM_README__ END)
+
+### `configuration.yaml` entities
+
+Possible entities:
+```
+dig_1: -> dig_16:  (type: binary_sensor)
+dig_rst_1: -> dig_rst_16:  (type: button)
+dig_cnt_1: -> dig_cnt_16:  (type: sensor)
+r10k_1: -> r10k_16:  (type: sensor)
+r1k_1: -> r1k_16:  (type: sensor)
+u_1: -> u_16:  (type: sensor)
+dig_cnt_en_1: -> dig_cnt_en_16:  (type: switch)
+```
+
+Entity options:
+- `chan_range: "start..end"` (specify inclusive channel range)
+- `update_interval: seconds` (specify the update interval for `sensor` and `binary_sensor`, default 30s)

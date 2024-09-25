@@ -1,3 +1,6 @@
+FULL_NAME = "Sixteen Analog/Digital Inputs"
+LINK = "https://sequentmicrosystems.com/products/sixteen-analog-digital-inputs-8-layer-stackable-hat-for-raspberry-pi"
+
 import lib16univin
 API = lib16univin.SM16univin
 DOMAIN = "SM16univin"
