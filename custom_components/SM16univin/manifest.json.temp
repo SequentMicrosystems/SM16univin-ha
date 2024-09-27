@@ -1,0 +1,13 @@
+{
+	"domain": "SM16univin",
+	"name": "Sequent Microsystems Sixteen Analog/Digital Inputs Integration",
+	"version": "1.0.0",
+	"integration_type": "device",
+	"documentation": "https://github.com/SequentMicrosystems/SM16univin-ha",
+	"issue_tracker": "https://github.com/SequentMicrosystems/SM16univin-ha",
+	"dependencies": [],
+	"after_dependencies": [],
+	"codeownders": ["3lv"],
+	"config_flow": false,
+	"requirements": ["SM16univin>=1.0.0"]
+}
