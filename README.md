@@ -14,7 +14,7 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 - [Install HACS video](https://youtu.be/Fl3lATWhQVM) for step 1.
 - [Enable I2C and Install file editor video](https://youtu.be/53Zj8NofS7k) for steps 2. and 3.
-- [Install and config card drivers video](https://youtu.be/yH2HKjm7j24) for steps 4. and 5.
+- [Install and config card drivers video](https://youtu.be/yH2HKjm7j24) for steps 4. and 5. (replace SMioplus-ha with SM16univin-ha)
 
 #### Prerequirements
 
@@ -101,7 +101,7 @@ SM16univin:
 
 - Only specific entities for different stack levels:
 
-> The following example is provided for illustrative purposes only and does not necessarily represent real entities.
+> !The following example is provided for illustrative purposes only and does NOT necessarily represent real entities!
 
 ```yaml
 SM16univin:
@@ -124,9 +124,10 @@ SM16univin:
 ### `configuration.yaml` entities
 
 Possible entities:
-```
+```yaml
 dig_1: -> dig_16:  (type: binary_sensor)
 dig_rst_1: -> dig_rst_16:  (type: button)
+rtc_1: (type: datetime)
 dig_cnt_1: -> dig_cnt_16:  (type: sensor)
 r10k_1: -> r10k_16:  (type: sensor)
 r1k_1: -> r1k_16:  (type: sensor)

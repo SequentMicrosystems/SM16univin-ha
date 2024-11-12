@@ -22,6 +22,15 @@ SM_MAP = {
                 },
         }
     },
+    "datetime": {
+        "rtc": {
+                "chan_no": 1,
+                "com": {
+                    "get": "get_rtc",
+                    "set": "set_rtc",
+                },
+        },
+    },
     "switch": {
         "dig_cnt_en": {
                 "chan_no": 16,
