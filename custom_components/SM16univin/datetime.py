@@ -14,7 +14,7 @@ from homeassistant.components.datetime import DateTimeEntity
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.util.dt as ha_dt
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 
 from . import (
         DOMAIN, CONF_STACK, CONF_TYPE, CONF_CHAN, CONF_NAME,
@@ -51,9 +51,10 @@ class DateTime(DateTimeEntity):
         self._icons = DEFAULT_ICONS | SM_MAP[self._type].get("icon", {})
         self._icon = self._icons["off"]
         self._uom = SM_MAP[self._type].get("uom", "")
-        self._value = 0
         self._remove_hooks = []
         self.__SM__init()
+        #self._value = datetime(2000, 1, 1, tzinfo=timezone.utc) # TODO: Change this
+        self._value = datetime(*self._SM_get(), tzinfo=timezone.utc)
         ### __CUSTOM_SETUP__ START
         ### __CUSTOM_SETUP__ END
 
@@ -76,7 +77,7 @@ class DateTime(DateTimeEntity):
 
     async def async_added_to_hass(self):
         new_hook = async_track_time_interval(
-                self.hass, self.async_update_ha_state, timedelta(seconds=self._update_interval)  # type: ignore[arg-type]
+                self.hass, self.async_update_ha_state, timedelta(seconds=self._update_interval)
         )
         self._remove_hooks.append(new_hook)
 
@@ -91,8 +92,8 @@ class DateTime(DateTimeEntity):
     def update(self):
         time.sleep(self._short_timeout)
         try:
-            date_tuple = self._SM_get(self._chan)
-            self._value = datetime(*date_tuple)
+            date_tuple = self._SM_get()
+            self._value = datetime(*date_tuple, tzinfo=timezone.utc)
             try:
                 requests.get("http://www.google.com", timeout=3)
                 has_internet = True
@@ -107,7 +108,7 @@ class DateTime(DateTimeEntity):
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
             return
-        if self._value != 0:
+        if self._value != None: # Make this reflect online and offline
             self._icon = self._icons["on"]
         else:
             self._icon = self._icons["off"]
