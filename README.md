@@ -112,7 +112,7 @@ SM16univin:
         update_interval: 0.1
     - stack: 2
       relay:
-        chan_range: "1..8"
+        channels: "1,2,5"
       opto_cnt:
         chan_range: "2..6"
         update_interval: 1
@@ -136,5 +136,6 @@ dig_cnt_en_1: -> dig_cnt_en_16:  (type: switch)
 ```
 
 Entity options:
+- `channels: "l,i,s,t"` (comma separated channel numbers)
 - `chan_range: "start..end"` (specify inclusive channel range)
 - `update_interval: seconds` (specify the update interval for `sensor` and `binary_sensor`, default 30s)

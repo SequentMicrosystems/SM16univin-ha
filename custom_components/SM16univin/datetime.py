@@ -19,6 +19,7 @@ from datetime import timedelta, datetime, timezone
 from . import (
         DOMAIN, CONF_STACK, CONF_TYPE, CONF_CHAN, CONF_NAME,
         CONF_UPDATE_INTERVAL,
+        CONF_INTERNET_SYNC_INTERVAL,
         SM_MAP, SM_API
 )
 SM_MAP = SM_MAP["datetime"]
@@ -35,11 +36,12 @@ async def async_setup_platform(hass, config, add_devices, discovery_info=None):
         stack=discovery_info.get(CONF_STACK),
         type=discovery_info.get(CONF_TYPE),
         chan=discovery_info.get(CONF_CHAN),
-        update_interval=discovery_info.get(CONF_UPDATE_INTERVAL) or 30,
+        update_interval=discovery_info.get(CONF_UPDATE_INTERVAL) or 1,
+        internet_sync_interval=discovery_info.get(CONF_INTERNET_SYNC_INTERVAL) or 60,
 	)])
 
 class DateTime(DateTimeEntity):
-    def __init__(self, hass, name, stack, type, chan, update_interval):
+    def __init__(self, hass, name, stack, type, chan, update_interval, internet_sync_interval):
         generated_name = DOMAIN + str(stack) + "_" + type + "_" + str(chan)
         self._unique_id = generate_entity_id("datetime.{}", generated_name, hass=hass)
         self._name = name or generated_name
@@ -47,6 +49,7 @@ class DateTime(DateTimeEntity):
         self._type = type
         self._chan = int(chan)
         self._update_interval = float(update_interval)
+        self._internet_sync_interval = float(internet_sync_interval)
         self._short_timeout = .05
         self._icons = DEFAULT_ICONS | SM_MAP[self._type].get("icon", {})
         self._icon = self._icons["off"]
@@ -80,10 +83,28 @@ class DateTime(DateTimeEntity):
                 self.hass, self.async_update_ha_state, timedelta(seconds=self._update_interval)
         )
         self._remove_hooks.append(new_hook)
+        new_hook = async_track_time_interval(
+                self.hass, self._internet_sync, timedelta(seconds=self._internet_sync_interval)
+        )
+        self._remove_hooks.append(new_hook)
 
     async def async_will_remove_from_hass(self):
         for remove_hook in self._remove_hooks:
             remove_hook()
+
+    def _internet_sync(self):
+        time.sleep(self._short_timeout)
+        try:
+            requests.get("http://www.google.com", timeout=3)
+            has_internet = True
+        except requests.ConnectionError:
+            has_internet = False
+        if has_internet:
+            ha_time = ha_dt.now()
+            self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
+            self._value = ha_time
+        else:
+            raise Exception("Error with internet sync")
 
     @property
     def should_poll(self): # type: ignore[override]
@@ -94,17 +115,6 @@ class DateTime(DateTimeEntity):
         try:
             date_tuple = self._SM_get()
             self._value = datetime(*date_tuple, tzinfo=timezone.utc)
-            try:
-                requests.get("http://www.google.com", timeout=3)
-                has_internet = True
-            except requests.ConnectionError:
-                has_internet = False
-            if has_internet:
-                ha_time = ha_dt.now()
-                self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
-                self._value = ha_time
-                _LOGGER.error(f"{DOMAIN} RTC updated to {self._value} from HA time")
-
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
             return
