@@ -102,7 +102,7 @@ class DateTime(DateTimeEntity):
         time.sleep(self._short_timeout)
         try:
             date_tuple = self._SM_get()
-            self._value = datetime(*date_tuple, microsecond=1, tzinfo=self._hass.config.timezone)
+            self._value = datetime(*date_tuple, microsecond=1, tzinfo=self._hass.config.time_zone)
             _LOGGER.error("DEBUG: Time read from local RTC!")
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
