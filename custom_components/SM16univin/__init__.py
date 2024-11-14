@@ -62,7 +62,7 @@ async def SM_load_all_platforms(hass, stack=0):
 def create_entity_config(config, entity, stack, type, chan):
     entity_config = {
             **config,
-            CONF_NAME: NAME_PREFIX + str(stack) + "_" + entity + "_" + str(chan),
+            CONF_NAME: NAME_PREFIX + str(stack) + "_" + type + "_" + str(chan),
             CONF_STACK: stack,
             CONF_TYPE: type,
             CONF_CHAN: chan,
