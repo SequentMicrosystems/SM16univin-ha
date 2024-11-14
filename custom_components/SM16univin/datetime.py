@@ -125,7 +125,7 @@ class DateTime(DateTimeEntity):
         except requests.ConnectionError:
             has_internet = False
         if has_internet:
-            ha_time = ha_dt.now()
+            ha_time = ha_dt.now(self._get_timezone())
             self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
             _LOGGER.error("DEBUG: Time read from internet. Old value: %s, new value: %s", self._value, ha_time)
             self._value = ha_time
