@@ -134,7 +134,7 @@ class DateTime(DateTimeEntity):
 
 
     def set_value(self, value: datetime) -> None:
-        _LOGGER.error("DEBUG: time manually set to: %s", self._value)
+        _LOGGER.error("DEBUG: time manually set to: %s", value)
         self._SM_set(value.year, value.month, value.day, value.hour, value.minute, value.second)
         self._value = value
 
