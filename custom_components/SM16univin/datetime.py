@@ -97,12 +97,17 @@ class DateTime(DateTimeEntity):
     def should_poll(self): # type: ignore[override]
         return False
 
+    def _get_timezone(self):
+        configured_timezone = self._hass.config.time_zone
+        timezone = ha_dt.get_time_zone(configured_timezone)
+        return timezone
+
     def update(self):
         _LOGGER.error("DEBUG: Updating")
         time.sleep(self._short_timeout)
         try:
             date_tuple = self._SM_get()
-            self._value = datetime(*date_tuple, microsecond=1, tzinfo=self._hass.config.time_zone)
+            self._value = datetime(*date_tuple, microsecond=1, tzinfo=self._get_timezone())
             _LOGGER.error("DEBUG: Time read from local RTC!")
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
