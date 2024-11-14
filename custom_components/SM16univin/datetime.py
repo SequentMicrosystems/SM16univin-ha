@@ -92,6 +92,24 @@ class DateTime(DateTimeEntity):
         for remove_hook in self._remove_hooks:
             remove_hook()
 
+    @property
+    def should_poll(self): # type: ignore[override]
+        return False
+
+    def update(self):
+        time.sleep(self._short_timeout)
+        try:
+            date_tuple = self._SM_get()
+            self._value = datetime(*date_tuple, tzinfo=timezone.utc)
+            _LOGGER.error("DEBUG: Time read from local RTC!")
+        except Exception as ex:
+            _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
+            return
+        if self._value != None: # Make this reflect online and offline
+            self._icon = self._icons["on"]
+        else:
+            self._icon = self._icons["off"]
+
     def _internet_sync(self, _):
         time.sleep(self._short_timeout)
         try:
@@ -107,22 +125,6 @@ class DateTime(DateTimeEntity):
         else:
             raise Exception("Error with internet sync")
 
-    @property
-    def should_poll(self): # type: ignore[override]
-        return False
-
-    def update(self):
-        time.sleep(self._short_timeout)
-        try:
-            date_tuple = self._SM_get()
-            self._value = datetime(*date_tuple, tzinfo=timezone.utc)
-        except Exception as ex:
-            _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
-            return
-        if self._value != None: # Make this reflect online and offline
-            self._icon = self._icons["on"]
-        else:
-            self._icon = self._icons["off"]
 
     def set_value(self, value: datetime) -> None:
         self._SM_set(value.year, value.month, value.day, value.hour, value.minute, value.second)
