@@ -92,7 +92,7 @@ class DateTime(DateTimeEntity):
         for remove_hook in self._remove_hooks:
             remove_hook()
 
-    def _internet_sync(self):
+    def _internet_sync(self, _):
         time.sleep(self._short_timeout)
         try:
             requests.get("http://www.google.com", timeout=3)
