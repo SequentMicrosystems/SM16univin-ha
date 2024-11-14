@@ -22,15 +22,6 @@ SM_MAP = {
                 },
         }
     },
-    "datetime": {
-        "rtc": {
-                "chan_no": 1,
-                "com": {
-                    "get": "get_rtc",
-                    "set": "set_rtc",
-                },
-        },
-    },
     "switch": {
         "dig_cnt_en": {
                 "chan_no": 16,
@@ -67,6 +58,15 @@ SM_MAP = {
                 "uom": "Ohm",
                 "com": {
                     "get": "get_r10k_in",
+                },
+        },
+    },
+    "datetime": {
+        "rtc": {
+                "chan_no": 1,
+                "com": {
+                    "get": "get_rtc",
+                    "set": "set_rtc",
                 },
         },
     },
