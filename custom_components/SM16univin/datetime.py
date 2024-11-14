@@ -97,6 +97,7 @@ class DateTime(DateTimeEntity):
         return False
 
     def update(self):
+        _LOGGER.error("DEBUG: Updating")
         time.sleep(self._short_timeout)
         try:
             date_tuple = self._SM_get()
