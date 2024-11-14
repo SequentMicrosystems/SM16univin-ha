@@ -95,7 +95,7 @@ class DateTime(DateTimeEntity):
     def _internet_sync(self, _):
         time.sleep(self._short_timeout)
         try:
-            requests.get("http://www.google.com", timeout=3)
+            requests.get("https://www.google.com", timeout=3)
             has_internet = True
         except requests.ConnectionError:
             has_internet = False
@@ -103,6 +103,7 @@ class DateTime(DateTimeEntity):
             ha_time = ha_dt.now()
             self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
             self._value = ha_time
+            _LOGGER.error("DEBUG: Time read from internet")
         else:
             raise Exception("Error with internet sync")
 
