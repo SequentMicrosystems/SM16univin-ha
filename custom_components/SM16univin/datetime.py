@@ -56,6 +56,7 @@ class DateTime(DateTimeEntity):
         self._uom = SM_MAP[self._type].get("uom", "")
         self._remove_hooks = []
         self.__SM__init()
+        self._hass = hass;
         #self._value = datetime(2000, 1, 1, tzinfo=timezone.utc) # TODO: Change this
         self._value = datetime(*self._SM_get(), tzinfo=timezone.utc)
         ### __CUSTOM_SETUP__ START
@@ -101,7 +102,7 @@ class DateTime(DateTimeEntity):
         time.sleep(self._short_timeout)
         try:
             date_tuple = self._SM_get()
-            self._value = datetime(*date_tuple, tzinfo=timezone.utc)
+            self._value = datetime(*date_tuple, microsecond=0, tzinfo=ha_dt.get_time_zone(self._hass))
             _LOGGER.error("DEBUG: Time read from local RTC!")
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
