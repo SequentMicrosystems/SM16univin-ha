@@ -128,7 +128,6 @@ class DateTime(DateTimeEntity):
             ha_time = ha_dt.now(self._get_timezone())
             self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
             _LOGGER.error("DEBUG: Time read from internet. Old value: %s, new value: %s", self._value, ha_time)
-            _LOGGER.error("DEBUG: Consecutive set and get values =?:", ha_time, datetime(*self._SM_get(), microsecond=2, tzinfo=self._get_timezone()))
             self._value = ha_time
         else:
             raise Exception("Error with internet sync")
@@ -137,6 +136,7 @@ class DateTime(DateTimeEntity):
     def set_value(self, value: datetime) -> None:
         _LOGGER.error("DEBUG: time manually set to: %s", value)
         self._SM_set(value.year, value.month, value.day, value.hour, value.minute, value.second)
+        _LOGGER.error("DEBUG: Consecutive set and get values =?:", value, datetime(*self._SM_get(), microsecond=2, tzinfo=self._get_timezone()))
         self._value = value
         # Can't update homeassistant os date, must use this sensor instead..:( ??
 
