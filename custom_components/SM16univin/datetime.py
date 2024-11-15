@@ -57,7 +57,6 @@ class DateTime(DateTimeEntity):
         self._remove_hooks = []
         self.__SM__init()
         self._hass = hass;
-        #self._value = datetime(2000, 1, 1, tzinfo=timezone.utc) # TODO: Change this
         self._value = datetime(*self._SM_get(), tzinfo=self._get_timezone())
         ### __CUSTOM_SETUP__ START
         ### __CUSTOM_SETUP__ END
@@ -103,12 +102,10 @@ class DateTime(DateTimeEntity):
         return timezone
 
     def update(self):
-        _LOGGER.error("DEBUG: Updating")
         time.sleep(self._short_timeout)
         try:
             date_tuple = self._SM_get()
             self._value = datetime(*date_tuple, microsecond=1, tzinfo=self._get_timezone())
-            _LOGGER.error("DEBUG: Time read from local RTC!")
         except Exception as ex:
             _LOGGER.error(DOMAIN + " %s update() failed, %e, %s, %s", self._type, ex, str(self._stack), str(self._chan))
             return
@@ -127,16 +124,14 @@ class DateTime(DateTimeEntity):
         if has_internet:
             ha_time = ha_dt.now(self._get_timezone())
             self._SM_set(ha_time.year, ha_time.month, ha_time.day, ha_time.hour, ha_time.minute, ha_time.second)
-            _LOGGER.error("DEBUG: Time read from internet. Old value: %s, new value: %s", self._value, ha_time)
             self._value = ha_time
         else:
             raise Exception("Error with internet sync")
 
 
     def set_value(self, value: datetime) -> None:
-        _LOGGER.error("DEBUG: time manually set to: %s", value)
+        value = value.astimezone(self._get_timezone())
         self._SM_set(value.year, value.month, value.day, value.hour, value.minute, value.second)
-        _LOGGER.error("DEBUG: Consecutive set and get values =?:", value, datetime(*self._SM_get(), microsecond=2, tzinfo=self._get_timezone()))
         self._value = value
         # Can't update homeassistant os date, must use this sensor instead..:( ??
 
