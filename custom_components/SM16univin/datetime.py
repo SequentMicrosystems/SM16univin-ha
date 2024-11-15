@@ -58,7 +58,7 @@ class DateTime(DateTimeEntity):
         self.__SM__init()
         self._hass = hass;
         #self._value = datetime(2000, 1, 1, tzinfo=timezone.utc) # TODO: Change this
-        self._value = datetime(*self._SM_get(), tzinfo=timezone.utc)
+        self._value = datetime(*self._SM_get(), tzinfo=self._get_timezone())
         ### __CUSTOM_SETUP__ START
         ### __CUSTOM_SETUP__ END
 
